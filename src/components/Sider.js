@@ -77,7 +77,7 @@ const SearchSider = styled.div`
 	display: flex;
 	align-items: center;
 	height: 50px;
-	margin: 2.625rem 1rem 2.625rem 2.875rem;
+	margin: 2.625rem 2.875rem 2.625rem 2.875rem;
 	gap: 1rem;
 `;
 const SearchInput = styled.input`
@@ -102,7 +102,6 @@ const SearchBtn = styled.button`
 `;
 const CloseBtn = styled.button`
 	background-color: ${colors.primaryBlue};
-
 	border: none;
 	margin: 1rem;
 	.material-icons {

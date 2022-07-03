@@ -5,6 +5,9 @@ import Shower from "../images/Shower.png";
 
 const Container = styled.div`
 	padding: 2.625rem 6rem;
+	@media only screen and (max-width: 600px) {
+		padding: 2.62rem;
+	}
 `;
 const UnitToggler = styled.div`
 	display: flex;
@@ -47,6 +50,9 @@ const CardsContainer = styled.div`
 	grid-template-columns: repeat(5, 1fr);
 	gap: 2rem;
 	margin-bottom: 4.5rem;
+	@media only screen and (max-width: 600px) {
+		grid-template-columns: repeat(1, 1fr);
+	}
 `;
 const FlexDiv = styled.div`
 	display: flex;
@@ -63,6 +69,9 @@ const DetailsContainer = styled.div`
 	grid-template-rows: repeat(2, 1fr);
 	gap: 2rem;
 	margin: 2rem 0 4.5rem 0;
+	@media only screen and (max-width: 600px) {
+		grid-template-columns: repeat(1, 1fr);
+	}
 `;
 const Detail = styled.p`
 	font-size: 4rem;
