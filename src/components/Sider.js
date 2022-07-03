@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import cloudBackground from "../images/cloudBackground.png";
 import Shower from "../images/Shower.png";
 import styled from "styled-components";
@@ -21,7 +21,7 @@ const CurrentWeatherDetails = styled.div`
 	height: 100%;
 	text-align: center;
 `;
-const SearchBtn = styled.button`
+const SearchPlacesBtn = styled.button`
 	color: ${colors.white};
 	background-color: ${colors.gray};
 	font-size: 1rem;
@@ -73,32 +73,91 @@ const Location = styled.p`
 	justify-content: center;
 	margin: 0 0 2.625rem 0;
 `;
+const SearchSider = styled.div`
+	display: flex;
+	align-items: center;
+	height: 50px;
+	margin: 2.625rem 1rem 2.625rem 2.875rem;
+	gap: 1rem;
+`;
+const SearchInput = styled.input`
+	color: ${colors.white};
+	font-size: 1rem;
+	font-weight: 500;
+	height: inherit;
+	width: 70%;
+	padding: 1rem;
+	border: 1px solid ${colors.white};
+	background-color: ${colors.primaryBlue};
+`;
+const SearchBtn = styled.button`
+	color: ${colors.white};
+	background-color: ${colors.brightBlue};
+	font-size: 1rem;
+	font-weight: 600px;
+	padding: 1rem;
+	border: none;
+	height: inherit;
+	width: 30%;
+`;
+const CloseBtn = styled.button`
+	background-color: ${colors.primaryBlue};
 
+	border: none;
+	margin: 1rem;
+	.material-icons {
+		color: ${colors.white};
+	}
+`;
 export default function Sider() {
+	const [toggleSearch, setToggleSearch] = useState(false);
+
 	const date = new window.Date().toLocaleDateString("en-US", {
 		weekday: "short",
 		day: "numeric",
 		month: "short",
 	});
+	const handleSearchPlaces = () => {
+		setToggleSearch(true);
+	};
+	const handleClose = () => {
+		setToggleSearch(false);
+	};
 	return (
-		<CurrentWeatherDetails>
-			<SearchSection>
-				<SearchBtn>Search for places</SearchBtn>
-				<LocationBtn>
-					<span className="material-icons">my_location</span>
-				</LocationBtn>
-			</SearchSection>
-			<ImageContainer>
-				<img src={Shower} alt="shower" />
-			</ImageContainer>
-			<Temperature>
-				15<span>℃</span>
-			</Temperature>
-			<TempCondition>Shower</TempCondition>
-			<Date>Today • {date}</Date>
-			<Location>
-				<span class="material-icons">place</span>Banglore
-			</Location>
-		</CurrentWeatherDetails>
+		<>
+			{!toggleSearch ? (
+				<CurrentWeatherDetails>
+					<SearchSection>
+						<SearchPlacesBtn onClick={handleSearchPlaces}>
+							Search for places
+						</SearchPlacesBtn>
+						<LocationBtn>
+							<span className="material-icons">my_location</span>
+						</LocationBtn>
+					</SearchSection>
+					<ImageContainer>
+						<img src={Shower} alt="shower" />
+					</ImageContainer>
+					<Temperature>
+						15<span>℃</span>
+					</Temperature>
+					<TempCondition>Shower</TempCondition>
+					<Date>Today • {date}</Date>
+					<Location>
+						<span class="material-icons">place</span>Banglore
+					</Location>
+				</CurrentWeatherDetails>
+			) : (
+				<>
+					<CloseBtn onClick={handleClose}>
+						<span class="material-icons">close</span>
+					</CloseBtn>
+					<SearchSider>
+						<SearchInput type="search" placeholder="search location" />
+						<SearchBtn>Search</SearchBtn>
+					</SearchSider>
+				</>
+			)}
+		</>
 	);
 }
