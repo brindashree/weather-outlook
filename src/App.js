@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import styled from "styled-components";
+import { Content } from "./components/Content";
+import Sider from "./components/Sider";
+import { colors } from "./utils/styles";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const Main = styled.div`
+	min-height: 100vh;
+	display: flex;
+`;
+const SideBar = styled.div`
+	min-height: 100vh;
+	width: 30%;
+	background-color: ${colors.primaryBlue};
+`;
+const MainContent = styled.div`
+	min-height: 100vh;
+	width: 70%;
+	background-color: ${colors.primaryBlack};
+`;
+
+const App = () => {
+	return (
+		<Main>
+			<SideBar>
+				<Sider />
+			</SideBar>
+			<MainContent>
+				<Content />
+			</MainContent>
+		</Main>
+	);
+};
 
 export default App;
