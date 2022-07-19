@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import cloudBackground from "../images/cloudBackground.png";
 import Shower from "../images/Shower.png";
+import LightRain from "../images/LightRain.png";
+import Hail from "../images/Hail.png";
+import HeavyCloud from "../images/HeavyCloud.png";
+import HeavyRain from "../images/HeavyRain.png";
+import LightCloud from "../images/LightCloud.png";
+import Sleet from "../images/Sleet.png";
+import Snow from "../images/Snow.png";
+import Thunderstorm from "../images/Thunderstorm.png";
 import styled from "styled-components";
 import { colors } from "../utils/styles";
 
@@ -46,7 +54,7 @@ const ImageContainer = styled.div`
 	display: flex;
 `;
 const Temperature = styled.p`
-	font-size: 9rem;
+	font-size: 5rem;
 	color: ${colors.white};
 	span {
 		font-size: 3rem;
@@ -108,7 +116,13 @@ const CloseBtn = styled.button`
 		color: ${colors.white};
 	}
 `;
-export default function Sider() {
+export default function Sider({
+	locationDetails,
+	loading,
+	search,
+	setSearch,
+	handleSearch,
+}) {
 	const [toggleSearch, setToggleSearch] = useState(false);
 
 	const date = new window.Date().toLocaleDateString("en-US", {
@@ -122,6 +136,45 @@ export default function Sider() {
 	const handleClose = () => {
 		setToggleSearch(false);
 	};
+
+	let weatherImage;
+	if (locationDetails) {
+		switch (locationDetails.weather[0].description) {
+			case "light rain":
+				weatherImage = LightRain;
+				break;
+			case "moderate rain":
+				weatherImage = LightRain;
+				break;
+			case "hail":
+				weatherImage = Hail;
+				break;
+			case "heavy cloud":
+				weatherImage = HeavyCloud;
+				break;
+			case "heavy rain":
+				weatherImage = HeavyRain;
+				break;
+			case "light cloud":
+				weatherImage = LightCloud;
+				break;
+			case "shower":
+				weatherImage = Shower;
+				break;
+			case "sleet":
+				weatherImage = Sleet;
+				break;
+			case "snow":
+				weatherImage = Snow;
+				break;
+			case "thunderstorm":
+				weatherImage = Thunderstorm;
+				break;
+			default:
+				weatherImage = Shower;
+		}
+	}
+	if (loading) return <p>Loading...</p>;
 	return (
 		<>
 			{!toggleSearch ? (
@@ -135,15 +188,17 @@ export default function Sider() {
 						</LocationBtn>
 					</SearchSection>
 					<ImageContainer>
-						<img src={Shower} alt="shower" />
+						<img src={weatherImage} alt="shower" />
 					</ImageContainer>
 					<Temperature>
-						15<span>℃</span>
+						{locationDetails?.main?.temp}
+						<span>℃</span>
 					</Temperature>
-					<TempCondition>Shower</TempCondition>
+					<TempCondition>{locationDetails?.weather[0]?.main}</TempCondition>
 					<Date>Today • {date}</Date>
 					<Location>
-						<span class="material-icons">place</span>Banglore
+						<span class="material-icons">place</span>
+						{locationDetails?.name}
 					</Location>
 				</CurrentWeatherDetails>
 			) : (
@@ -152,8 +207,15 @@ export default function Sider() {
 						<span class="material-icons">close</span>
 					</CloseBtn>
 					<SearchSider>
-						<SearchInput type="search" placeholder="search location" />
-						<SearchBtn>Search</SearchBtn>
+						<SearchInput
+							type="search"
+							placeholder="search location"
+							value={search}
+							onChange={(e) => {
+								setSearch(e.target.value);
+							}}
+						/>
+						<SearchBtn onClick={handleSearch}>Search</SearchBtn>
 					</SearchSider>
 				</>
 			)}

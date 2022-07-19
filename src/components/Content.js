@@ -1,36 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import { colors } from "../utils/styles";
-import Shower from "../images/Shower.png";
-
+import { fetchWeatherImage } from "../utils";
 const Container = styled.div`
 	padding: 2.625rem 6rem;
 	@media only screen and (max-width: 600px) {
 		padding: 2.62rem;
 	}
 `;
-const UnitToggler = styled.div`
-	display: flex;
-	justify-content: end;
-	margin-bottom: 4.125rem;
-`;
-const Unit = styled.button`
-	border: none;
-	border-radius: 50%;
-	color: ${colors.white};
-	background-color: ${colors.darkGrayBg};
-	margin-left: 1rem;
-	font-size: 1.125rem;
-	width: 50px;
-	height: 50px;
-	font-weight: 700;
-`;
 const WeatherCard = styled.div`
 	background-color: ${colors.primaryBlue};
 	text-align: center;
 `;
 const StyledText = styled.p`
-	font-size: 1rem;
+	font-size: 0.85rem;
 	font-weight: 500;
 	color: ${colors.white};
 	padding: 1rem;
@@ -48,8 +31,14 @@ const ImageContainer = styled.div`
 const CardsContainer = styled.div`
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
-	gap: 2rem;
+	gap: 1rem;
 	margin-bottom: 4.5rem;
+	@media only screen and (max-width: 1024px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	@media only screen and (max-width: 960px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 	@media only screen and (max-width: 600px) {
 		grid-template-columns: repeat(1, 1fr);
 	}
@@ -69,7 +58,7 @@ const DetailsContainer = styled.div`
 	grid-template-rows: repeat(2, 1fr);
 	gap: 2rem;
 	margin: 2rem 0 4.5rem 0;
-	@media only screen and (max-width: 600px) {
+	@media only screen and (max-width: 960px) {
 		grid-template-columns: repeat(1, 1fr);
 	}
 `;
@@ -90,7 +79,8 @@ const WindStatusDetail = styled.div`
 	align-items: center;
 	.material-icons {
 		color: ${colors.white};
-		transform: rotate(-125deg);
+		transform: ${(props) =>
+			props.degree ? `rotate(${props.degree});` : `rotate(-125deg);`};
 	}
 `;
 const Footer = styled.p`
@@ -125,73 +115,45 @@ const Progress = styled.div`
 	width: ${(props) => props.width}%;
 `;
 
-export const Content = () => {
+export const Content = ({ locationDetails, loading, forecastDetails }) => {
+	if (loading) return <p>Loading...</p>;
+	const visibility = (locationDetails?.visibility / 1000) * 0.6213;
+
 	return (
 		<Container>
-			<UnitToggler>
-				<Unit>℃</Unit>
-				<Unit>℉</Unit>
-			</UnitToggler>
 			<CardsContainer>
-				<WeatherCard>
-					<StyledText>Sun, 7 Jun</StyledText>
-					<ImageContainer>
-						<img src={Shower} alt="shower" />
-					</ImageContainer>
-					<FlexDiv>
-						<StyledText>16°C</StyledText>
-						<StyledText>16°C</StyledText>
-					</FlexDiv>
-				</WeatherCard>
-				<WeatherCard>
-					<StyledText>Sun, 7 Jun</StyledText>
-					<ImageContainer>
-						<img src={Shower} alt="shower" />
-					</ImageContainer>
-					<FlexDiv>
-						<StyledText>16°C</StyledText>
-						<StyledText>16°C</StyledText>
-					</FlexDiv>
-				</WeatherCard>
-				<WeatherCard>
-					<StyledText>Sun, 7 Jun</StyledText>
-					<ImageContainer>
-						<img src={Shower} alt="shower" />
-					</ImageContainer>
-					<FlexDiv>
-						<StyledText>16°C</StyledText>
-						<StyledText>16°C</StyledText>
-					</FlexDiv>
-				</WeatherCard>
-				<WeatherCard>
-					<StyledText>Sun, 7 Jun</StyledText>
-					<ImageContainer>
-						<img src={Shower} alt="shower" />
-					</ImageContainer>
-					<FlexDiv>
-						<StyledText>16°C</StyledText>
-						<StyledText>16°C</StyledText>
-					</FlexDiv>
-				</WeatherCard>
-				<WeatherCard>
-					<StyledText>Sun, 7 Jun</StyledText>
-					<ImageContainer>
-						<img src={Shower} alt="shower" />
-					</ImageContainer>
-					<FlexDiv>
-						<StyledText>16°C</StyledText>
-						<StyledText>16°C</StyledText>
-					</FlexDiv>
-				</WeatherCard>
+				{forecastDetails?.length &&
+					forecastDetails.map((forecast, i) => (
+						<WeatherCard key={i}>
+							<StyledText>
+								{new Date(forecast?.dt_txt).toLocaleDateString("en-US", {
+									weekday: "short",
+									day: "numeric",
+									month: "short",
+								})}
+							</StyledText>
+							<ImageContainer>
+								<img
+									src={fetchWeatherImage(forecast?.weather?.[0]?.description)}
+									alt="shower"
+								/>
+							</ImageContainer>
+							<FlexDiv>
+								<StyledText>{forecast?.main?.temp_min}°C</StyledText>
+								<StyledText>{forecast?.main?.temp_max}°C</StyledText>
+							</FlexDiv>
+						</WeatherCard>
+					))}
 			</CardsContainer>
-			<SectionHeader>Today’s Hightlights</SectionHeader>
+			<SectionHeader>Today's Hightlights</SectionHeader>
 			<DetailsContainer>
 				<WeatherCard>
 					<StyledText>Wind Status</StyledText>
 					<Detail>
-						7<span>mph</span>
+						{locationDetails?.wind?.speed}
+						<span>mph</span>
 					</Detail>
-					<WindStatusDetail>
+					<WindStatusDetail degree={locationDetails?.wind?.deg}>
 						<span class="material-icons">assistant_navigation</span>
 						<StyledText>WSW</StyledText>
 					</WindStatusDetail>
@@ -199,7 +161,8 @@ export const Content = () => {
 				<WeatherCard>
 					<StyledText>Humidity</StyledText>
 					<Detail>
-						84<span>%</span>
+						{locationDetails?.main?.humidity}
+						<span>%</span>
 					</Detail>
 					<ProgressIndicators>
 						<Indicator>0</Indicator>
@@ -207,19 +170,21 @@ export const Content = () => {
 						<Indicator>100</Indicator>
 					</ProgressIndicators>
 					<ProgressBar>
-						<Progress width={84} />
+						<Progress width={locationDetails?.main?.humidity} />
 					</ProgressBar>
 				</WeatherCard>
 				<WeatherCard>
 					<StyledText>Visibility</StyledText>
 					<Detail>
-						6,4<span>miles</span>
+						{visibility?.toFixed(1)}
+						<span>miles</span>
 					</Detail>
 				</WeatherCard>
 				<WeatherCard>
 					<StyledText>Air Pressure</StyledText>
 					<Detail>
-						998<span>mb</span>
+						{locationDetails?.main?.pressure}
+						<span>mb</span>
 					</Detail>
 				</WeatherCard>
 			</DetailsContainer>
