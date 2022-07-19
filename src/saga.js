@@ -18,7 +18,6 @@ const formatData = (data) => {
 };
 
 function* fetchDefaultWeather(action) {
-	console.log({ action });
 	try {
 		const result = yield call(defaultWeather, action?.payload);
 		if (result) {
