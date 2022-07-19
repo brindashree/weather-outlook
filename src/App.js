@@ -197,7 +197,7 @@ const App = () => {
 									<span>℃</span>
 								</Temperature>
 								<TempCondition>
-									{locationDetails?.weather[0]?.main}
+									{locationDetails?.weather?.[0]?.main}
 								</TempCondition>
 								<Date>Today • {date}</Date>
 								<Location>
