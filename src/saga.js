@@ -11,7 +11,7 @@ import {
 
 const _ = require("lodash");
 const formatData = (data) => {
-	data.map((res) => {
+	data?.map((res) => {
 		return (res.dt_txt = res?.dt_txt.split(" ")[0]);
 	});
 	return _.uniqBy(data, "dt_txt").slice(1, 7);
