@@ -2,7 +2,7 @@ const options = {
 	method: "GET",
 	headers: {
 		"X-RapidAPI-Key": "75e80d4142msheb47a25d9796294p14df4ejsnbdac0ea3d307",
-		"X-RapidAPI-Host": "https://community-open-weather-map.p.rapidapi.com",
+		"X-RapidAPI-Host": "community-open-weather-map.p.rapidapi.com",
 	},
 };
 
