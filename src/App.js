@@ -119,7 +119,7 @@ const Main = styled.div`
 	}
 `;
 const SideBar = styled.div`
-	min-height: 100vh;
+	height: auto;
 	width: 30%;
 	background-color: ${colors.primaryBlue};
 	@media only screen and (max-width: 600px) {
@@ -154,6 +154,7 @@ const App = () => {
 	const handleSearch = () => {
 		dispatch(getDefaultWeatherDetails(search));
 		dispatch(getNextFiveDayForecast(search));
+		setToggleSearch(false);
 	};
 	const [toggleSearch, setToggleSearch] = useState(false);
 
